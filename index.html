@@ -64,8 +64,8 @@
   
     <article id="post-matrix" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/04/10/matrix/" class="article-date">
-  <time datetime="2019-04-10T01:16:45.575Z" itemprop="datePublished">2019-04-10</time>
+    <a href="/2019/04/15/matrix/" class="article-date">
+  <time datetime="2019-04-14T16:00:00.000Z" itemprop="datePublished">2019-04-15</time>
 </a>
     
   </div>
@@ -76,7 +76,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/10/matrix/">trasform matrix</a>
+      <a class="article-title" href="/2019/04/15/matrix/">trasform matrix</a>
     </h1>
   
 
@@ -90,15 +90,18 @@
 <li>会解多元方程组，O了</li>
 </ol>
 <h2 id="计算的样例"><a href="#计算的样例" class="headerlink" title="计算的样例"></a>计算的样例</h2><p><strong>原始图形</strong><br>这里以一个矩形作为示例，设定我们变形的中心是以矩形的中心作为原点，矩形宽2X<sub>0</sub>，高2Y<sub>0</sub>：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">2</span>X0;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">2</span>Y0;</span><br><span class="line">  <span class="attribute">transform-origin</span>: center;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>那么我们以当前矩形作为坐标系的原点，可以绘制一个矩形，四个角的坐标分别为：<br>右上角：(X<sub>0</sub>, Y<sub>0</sub>)<br>右下角：(X<sub>0</sub>, -Y<sub>0</sub>)<br>左下角：(-X<sub>0</sub>, -Y<sub>0</sub>)<br>左上角：(-X<sub>0</sub>, Y<sub>0</sub>)<br>和X，Y轴的交点分别为：<br>(0, Y<sub>0</sub>)，(-X<sub>0</sub>, 0)，(0, -Y<sub>0</sub>)，(X<sub>0</sub>, 0)</p>
-<p><img src="/2019/04/10/matrix/origin.png" alt="原始图形"></p>
-<p><strong>变换后的图形</strong><br>理论上，新的图形只要跟原始的图形的表达式，彼此间是线性相关的，那么一定是可以透过一个固定数值的矩阵来进行线性变换的。因此，变换后的图形，一定是平行四边形，且四边形的中心仍然是坐标轴的原点，我们假设新的图形的四个角的坐标为（X<sub>1</sub>, Y<sub>1</sub>, X<sub>2</sub>, Y<sub>2</sub>均为正数)：<br>右上角：(X<sub>1</sub>, Y<sub>1</sub>)<br>右下角：(X<sub>2</sub>, -Y<sub>2</sub>)<br>左下角：(-X<sub>1</sub>, -Y<sub>1</sub>)<br>左上角：(-X<sub>2</sub>, Y<sub>2</sub>)</p>
-<p><img src="/2019/04/10/matrix/trasformed.png" alt="转换后的图形"></p>
+<p>那么我们以当前矩形作为坐标系的原点，可以绘制一个矩形，四个角的坐标分别为：<br>右上角：(X<sub>0</sub>, Y<sub>0</sub>)<br>右下角：(X<sub>0</sub>, -Y<sub>0</sub>)<br>左下角：(-X<sub>0</sub>, -Y<sub>0</sub>)<br>左上角：(-X<sub>0</sub>, Y<sub>0</sub>)<br>和X，Y轴的交点分别为：<br>(0, Y<sub>0</sub>)，(-X<sub>0</sub>, 0)，(0, -Y<sub>0</sub>)，(X<sub>0</sub>, 0)<br><img src="/2019/04/15/matrix/origin.png" alt="原始图形"></p>
+<p><strong>变换后的图形</strong><br>理论上，新的图形只要跟原始的图形的表达式，彼此间是线性相关的，那么一定是可以透过一个固定数值的矩阵来进行线性变换的。因此，变换后的图形，一定是平行四边形，我们假设新的图形的四个角的坐标为（X<sub>1</sub>, Y<sub>1</sub>, X<sub>2</sub>, Y<sub>2</sub>均为正数，变换后的中心仍为原点)：<br>右上角：(X<sub>1</sub>, Y<sub>1</sub>)<br>右下角：(X<sub>2</sub>, -Y<sub>2</sub>)<br>左下角：(-X<sub>1</sub>, -Y<sub>1</sub>)<br>左上角：(-X<sub>2</sub>, Y<sub>2</sub>)<br>和X，Y轴的交点分别为：<br>(0, (Y<sub>1</sub> + Y<sub>2</sub>)/2)，(-(X<sub>1</sub> + X<sub>2</sub>)/2, 0)，(0, -(Y<sub>1</sub> + Y<sub>2</sub>)/2)，((X<sub>1</sub> + X<sub>2</sub>)/2, 0)<br><img src="/2019/04/15/matrix/trasformed.png" alt="转换后的图形"></p>
+<hr>
+<p>根据matrix(a, b, c, d, e, f)的转换规则：<br>x’ = a<em>x + c</em>y + e<br>y’ = b<em>x + d</em>y + f<br>在假设变换的时候，每个角所在的象限没有发生变化的前提下（即(X<sub>0</sub>, Y<sub>0</sub>)变为(X<sub>1</sub>, Y<sub>1</sub>)，(X<sub>0</sub>, -Y<sub>0</sub>)变为(X<sub>2</sub>, -Y<sub>2</sub>)，依次类推…）<br>我们可以得到上述坐标转换的一个方程组：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// 右上角</span><br><span class="line">X1 = a*X0 + c*Y0 + e</span><br><span class="line">Y1 = b*X0 + d*Y0 + f</span><br><span class="line"></span><br><span class="line">// 右下角</span><br><span class="line">X2 = a*X0 - c*Y0 + e</span><br><span class="line">-Y2 = b*X0 - d*Y0 + f</span><br><span class="line"></span><br><span class="line">// 左下角</span><br><span class="line">-X1 = -a*X0 - c*Y0 + e</span><br><span class="line">-Y1 = -b*X0 - d*Y0 + f</span><br><span class="line"></span><br><span class="line">// 左上角</span><br><span class="line">-X2 = -a*X0 + c*Y0 + e</span><br><span class="line">Y2 = -b*X0 + d*Y0 + f</span><br></pre></td></tr></table></figure></p>
+<p>可以解得：<br>a = (X<sub>1</sub> + X<sub>2</sub>) / 2X<sub>0</sub><br>b = (Y<sub>1</sub> - Y<sub>2</sub>) / 2X<sub>0</sub><br>c = (X<sub>1</sub> - X<sub>2</sub>) / 2Y<sub>0</sub><br>d = (Y<sub>1</sub> + Y<sub>2</sub>) / 2Y<sub>0</sub><br>e = 0<br>f = 0</p>
+<p>拿原图和X、Y轴的几个交点来演算，可以发现计算没有问题<br>(0, Y<sub>0</sub>)变换到((X<sub>1</sub> - X<sub>2</sub>) / 2, (Y<sub>1</sub> + Y<sub>2</sub>) / 2)<br>(-X<sub>0</sub>, 0)变换到((-X<sub>1</sub> - X<sub>2</sub>) / 2, (-Y<sub>1</sub> + Y<sub>2</sub>) / 2)<br>(0, -Y<sub>0</sub>)变换到((-X<sub>1</sub> + X<sub>2</sub>) / 2, (-Y<sub>1</sub> - Y<sub>2</sub>) / 2)<br>(X<sub>0</sub>, 0)变换到((X<sub>1</sub> + X<sub>2</sub>) / 2, (Y<sub>1</sub> - Y<sub>2</sub>) / 2)</p>
+<p>如果变换后的图形，中心不再是坐标轴原点，那么中心的偏移量（向量以(X<sub>3</sub>, Y<sub>3</sub>)表示），那么可得<br>e = X<sub>3</sub><br>f = Y<sub>3</sub></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/10/matrix/" data-id="cjui2wg0l0000bwv4b1vkweqe" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/15/matrix/" data-id="cjui6zuwa0000csv4ucuplk4s" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/css/">css</a></li></ul>
@@ -155,7 +158,7 @@
       <ul>
         
           <li>
-            <a href="/2019/04/10/matrix/">trasform matrix</a>
+            <a href="/2019/04/15/matrix/">trasform matrix</a>
           </li>
         
       </ul>
