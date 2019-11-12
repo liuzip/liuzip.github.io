@@ -62,6 +62,59 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-proxy" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/08/proxy/" class="article-date">
+  <time datetime="2019-11-08T06:25:03.000Z" itemprop="datePublished">2019-11-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/08/proxy/">Proxy</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Vue都3了…</p>
+<p>除了一些七七八八的特性，其中新一代的Vue对于其响应式的数据实现方式，换了搞法，从getter、setter变成了ES6的Proxy</p>
+<p>我个人理解，Proxy这种代理，不仅仅能够更加方便的处理响应式数据，还提供了针对函数的执行、new操作等一系列新的处理方式，在此我依照我个人的理解，尝试去实现了下这种新的响应式数据的处理方式。</p>
+<p>这部分demo代码有以下限制：</p>
+<ol>
+<li>computed里面所涉及到的所有数据，均从data中获取，没有进行循环检测</li>
+<li>data里面的数据只支持一层，所有参数不能是数组、结构体</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> Vue = <span class="function"><span class="keyword">function</span>(<span class="params">opts</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> &#123; data, computed &#125; = opts</span><br><span class="line">  <span class="keyword">let</span> computedMap = <span class="keyword">new</span> <span class="built_in">Map</span>() <span class="comment">// 用以存储，每个data属性会影响哪些computed值</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> addComputedMap = <span class="function"><span class="keyword">function</span>(<span class="params">dataKey, computedKey</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 每个data里的参数变动，会影响哪些computed参数的值</span></span><br><span class="line">    <span class="keyword">let</span> arr = computedMap.get(dataKey)</span><br><span class="line">    <span class="keyword">if</span>(!arr) &#123;</span><br><span class="line">      computedMap.set(dataKey, [ computedKey ])</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      computedMap.set(dataKey, [...arr, computedKey])</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 专门用于设定computedMap参数的proxy</span></span><br><span class="line">  <span class="keyword">let</span> computedProxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(<span class="built_in">Object</span>.assign(&#123;&#125;, data, computed), &#123;</span><br><span class="line">    <span class="keyword">get</span>(target, attr) &#123;</span><br><span class="line">      <span class="keyword">if</span>(setComputedKey) &#123;</span><br><span class="line">        <span class="comment">// 设定特定computedKey，需要读取哪个attr</span></span><br><span class="line">        addComputedMap(attr, setComputedKey)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">Reflect</span>.get(target, attr)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="keyword">set</span>(_1, attr, _2, receiver) &#123;</span><br><span class="line">      <span class="comment">// 找到指定的computed，调用对应的函数，从而确定计算指定的computed需要哪些data数据</span></span><br><span class="line">      computed[attr].call(receiver)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 更新computedMap</span></span><br><span class="line">  <span class="keyword">let</span> setComputedKey = <span class="string">''</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">Object</span>.keys(computed).forEach(<span class="function"><span class="params">func</span> =&gt;</span> &#123;</span><br><span class="line">    setComputedKey = func</span><br><span class="line">    computedProxy[func] = <span class="string">''</span></span><br><span class="line">    setComputedKey = <span class="string">''</span></span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 返回真正提供给用户的Proxy</span></span><br><span class="line">  <span class="keyword">let</span> proxied = <span class="keyword">new</span> <span class="built_in">Proxy</span>(<span class="built_in">Object</span>.assign(&#123;&#125;, data, computed), &#123;</span><br><span class="line">      <span class="keyword">set</span>(target, attr, value, receiver) &#123;</span><br><span class="line">        <span class="comment">// 设定值</span></span><br><span class="line">        <span class="built_in">Reflect</span>.set(target, attr, value)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 找到收到影响的computed</span></span><br><span class="line">        <span class="keyword">let</span> arr = computedMap.get(attr)</span><br><span class="line">        <span class="keyword">if</span>(arr) &#123;</span><br><span class="line">          arr.forEach(<span class="function"><span class="params">computedAttr</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="comment">// 将所有待更新的computed数据重新计算一遍</span></span><br><span class="line">            computed[computedAttr] &amp;&amp; (receiver[computedAttr] = computed[computedAttr].call(receiver))</span><br><span class="line">          &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 更新所有默认数据，从而更新对应的computed值</span></span><br><span class="line">  <span class="built_in">Object</span>.keys(data).forEach(<span class="function"><span class="params">d</span> =&gt;</span> proxied[d] = data[d])</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> proxied</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> instance = Vue(&#123;</span><br><span class="line">  data: &#123;</span><br><span class="line">    att1: <span class="number">1</span>,</span><br><span class="line">    att2: <span class="number">2</span></span><br><span class="line">  &#125;,</span><br><span class="line">  computed: &#123;</span><br><span class="line">    add() &#123; <span class="keyword">return</span> <span class="keyword">this</span>.att1 + <span class="keyword">this</span>.att2 &#125;,</span><br><span class="line">    minus() &#123; <span class="keyword">return</span> <span class="keyword">this</span>.att1 - <span class="keyword">this</span>.att2 &#125;,</span><br><span class="line">    sum() &#123; <span class="keyword">return</span> <span class="keyword">this</span>.add + <span class="keyword">this</span>.minus &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(instance) <span class="comment">// &#123; att1: 1, att2: 2, sum: 3, minus: -1 &#125;</span></span><br><span class="line">instance.att1 = <span class="number">3</span></span><br><span class="line">instance.att2 = <span class="number">1</span></span><br><span class="line"><span class="built_in">console</span>.log(instance) <span class="comment">// &#123; att1: 3, att2: 1, sum: 4, minus: 2 &#125;</span></span><br></pre></td></tr></table></figure>
+<p>上述代码，构建了一个Proxy代理，真实的所数据值都存储在Proxy对应的原始target上，每当有设定了data值，则会根据预先存储的Map找到受到影响的computed值，从而在设定时就更新了computed值。</p>
+<p>不过依然有些问题，譬如：</p>
+<ol>
+<li>如果data是多层的结构，如何将data作为一个多层的Proxy值，每次修改都能触发修改最外层的computed值</li>
+<li>没有校验computed彼此之间的循环调用（譬如计算A需要B，计算B又需要A），用户去设定值的时候没有去校验是否设定的为computed值</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/08/proxy/" data-id="ck2voggpd00004gv4h2h76uzl" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tech/">tech</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-PWA" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/06/25/PWA/" class="article-date">
@@ -126,7 +179,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/06/25/PWA/" data-id="cjxbnpz2s0000vsv4rrz14pjm" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/06/25/PWA/" data-id="ck2voggpw00034gv4rs1u4mgi" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tech/">tech</a></li></ul>
@@ -176,7 +229,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/05/28/iteration/" data-id="cjxbnpz320003vsv48z8fkjbj" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/05/28/iteration/" data-id="ck2voggq300084gv43kvvqozm" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/">algorithm</a></li></ul>
@@ -217,7 +270,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/27/calculateAST/" data-id="cjxbnpz2y0001vsv4s7rvvxpt" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/27/calculateAST/" data-id="ck2voggpz00064gv4wmj83aep" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/">algorithm</a></li></ul>
@@ -268,7 +321,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/15/matrix/" data-id="cjxbnpz330004vsv4kb4tiv4o" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/15/matrix/" data-id="ck2voggpy00044gv45mp7v02z" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/css/">css</a></li></ul>
@@ -303,7 +356,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/algorithm/" style="font-size: 20px;">algorithm</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/tech/" style="font-size: 10px;">tech</a>
+      <a href="/tags/algorithm/" style="font-size: 20px;">algorithm</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/tech/" style="font-size: 20px;">tech</a>
     </div>
   </div>
 
@@ -312,7 +365,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li></ul>
     </div>
   </div>
 
@@ -323,6 +376,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/11/08/proxy/">Proxy</a>
+          </li>
         
           <li>
             <a href="/2019/06/25/PWA/">PWA</a>
