@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Proxy代理V2 | { f: (l, z) =&gt; 611 }</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="升级啦，data参数支持多层得了：123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Proxy代理V2">
+<meta property="og:url" content="http://yoursite.com/2019/11/18/ProxyV2/index.html">
+<meta property="og:site_name" content="{ f: (l, z) =&gt; 611 }">
+<meta property="og:description" content="升级啦，data参数支持多层得了：123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-11-18T10:09:22.467Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Proxy代理V2">
+<meta name="twitter:description" content="升级啦，data参数支持多层得了：123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596">
+  
+    <link rel="alternate" href="/atom.xml" title="{ f: (l, z) =&gt; 611 }" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">{ f: (l, z) =&gt; 611 }</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-ProxyV2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/18/ProxyV2/" class="article-date">
+  <time datetime="2019-11-18T09:57:55.000Z" itemprop="datePublished">2019-11-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Proxy代理V2
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>升级啦，data参数支持多层得了：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> isSymbol = <span class="function">(<span class="params">val</span>) =&gt;</span> <span class="keyword">typeof</span> val === <span class="string">'symbol'</span></span><br><span class="line"><span class="keyword">const</span> builtInSymbols = <span class="keyword">new</span> <span class="built_in">Set</span>(<span class="built_in">Object</span>.getOwnPropertyNames(<span class="built_in">Symbol</span>)</span><br><span class="line">      .map(<span class="function"><span class="params">key</span> =&gt;</span> <span class="built_in">Symbol</span>[key])</span><br><span class="line">      .filter(isSymbol))</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> proxied = &#123;</span><br><span class="line">  instance: <span class="literal">null</span>,</span><br><span class="line">  computedStack: <span class="literal">null</span>,</span><br><span class="line">  currentComputedKey: <span class="string">''</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span>(<span class="params">&#123; data, computed = &#123;&#125;, methods = &#123;&#125; &#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> assembled = <span class="built_in">Object</span>.assign(&#123;&#125;,</span><br><span class="line">              <span class="built_in">JSON</span>.parse(<span class="built_in">JSON</span>.stringify(data)), computed, methods)</span><br><span class="line">  <span class="keyword">let</span> mapStack = <span class="keyword">new</span> <span class="built_in">Map</span>() <span class="comment">// 用于存储data数据和computed数据得映射关系</span></span><br><span class="line"></span><br><span class="line">  proxied.computedStack = computed</span><br><span class="line"></span><br><span class="line">  proxied.instance = proxify(assembled, mapStack, proxied) <span class="comment">// 创建proxy对象</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设定computed和data数据之间得依赖关系</span></span><br><span class="line">  <span class="built_in">Object</span>.keys(computed).forEach(<span class="function"><span class="params">func</span> =&gt;</span> &#123;</span><br><span class="line">    proxied.currentComputedKey = func</span><br><span class="line">    computed[func].call(proxied.instance)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">delete</span> proxied.currentComputedKey</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设定data数据，以更新comupted数据</span></span><br><span class="line">  dataSet(data, proxied.instance)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> proxied.instance</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// helpers</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">dataSet</span>(<span class="params">data, p</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">Object</span>.keys(data).forEach(<span class="function"><span class="params">d</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">typeof</span>(data[d]) === <span class="string">'object'</span> ? dataSet(data[d], p[d]) : (p[d] = data[d])</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">proxify</span>(<span class="params">data, mapStack, proxied</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Proxy</span>(data, &#123;</span><br><span class="line">    <span class="keyword">get</span>(target, property, receiver) &#123;</span><br><span class="line">      <span class="keyword">let</span> res = <span class="built_in">Reflect</span>.get(target, property, receiver)</span><br><span class="line">      <span class="comment">// 如果是proxy中得symbol，直接返回结果</span></span><br><span class="line">      <span class="keyword">if</span>(isSymbol(property) &amp;&amp; builtInSymbols.has(property))</span><br><span class="line">        <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span>(<span class="keyword">typeof</span>(res) === <span class="string">'object'</span>)</span><br><span class="line">        <span class="keyword">return</span> proxify(res, mapStack, proxied) <span class="comment">// 子层object也需要监控</span></span><br><span class="line">      <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(proxied.currentComputedKey) &#123;</span><br><span class="line">          <span class="comment">// 如果是更新依赖环节，还需要更新依赖关系</span></span><br><span class="line">          updateStack(target, property, mapStack, proxied.currentComputedKey)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="keyword">set</span>(target, property, value) &#123;</span><br><span class="line">      <span class="built_in">Reflect</span>.set(target, property, value)</span><br><span class="line">      <span class="keyword">let</span> updateArr = getItemFromStack(target, property, mapStack) <span class="comment">// 如果有依赖需要被更新</span></span><br><span class="line">      <span class="keyword">if</span>(updateArr !== <span class="keyword">void</span> <span class="number">0</span>) &#123;</span><br><span class="line">        updateArr.forEach(<span class="function"><span class="params">key</span> =&gt;</span> &#123; <span class="comment">// 更新相应得computed数据</span></span><br><span class="line">          <span class="built_in">Reflect</span>.set(proxied.instance, key, proxied.computedStack[key].call(proxied.instance))</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* mapStack Map( </span></span><br><span class="line"><span class="comment">*   porpertyStack Map( target 为 key</span></span><br><span class="line"><span class="comment">*     property Set( computed ), 设定的target的property为key，受到影响的computed为Set Value</span></span><br><span class="line"><span class="comment">*     property Set( computed )</span></span><br><span class="line"><span class="comment">*   )</span></span><br><span class="line"><span class="comment">* )</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">updateStack</span>(<span class="params">target, property, mapStack, key</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> porpertyStack = mapStack.get(target)</span><br><span class="line">  <span class="keyword">if</span>(porpertyStack === <span class="keyword">void</span> <span class="number">0</span>)</span><br><span class="line">    mapStack.set(target, (porpertyStack = <span class="keyword">new</span> <span class="built_in">Map</span>()))</span><br><span class="line">  <span class="keyword">let</span> dep = porpertyStack.get(property)</span><br><span class="line">  <span class="keyword">if</span>(dep === <span class="keyword">void</span> <span class="number">0</span>)</span><br><span class="line">    porpertyStack.set(property, (dep = <span class="keyword">new</span> <span class="built_in">Set</span>()))</span><br><span class="line">  <span class="keyword">if</span>(key)</span><br><span class="line">    dep.add(key)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getItemFromStack</span>(<span class="params">target, property, mapStack</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> porpertyStack = mapStack.get(target)</span><br><span class="line">  <span class="keyword">if</span>(porpertyStack === <span class="keyword">void</span> <span class="number">0</span>) </span><br><span class="line">    <span class="keyword">return</span> </span><br><span class="line">  <span class="keyword">return</span> porpertyStack.get(property)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>实际使用时候，对应得测试：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'./core/proxy'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> instance = Vue(&#123;</span><br><span class="line">  data: &#123;</span><br><span class="line">    att1: <span class="number">1</span>,</span><br><span class="line">    att2: <span class="number">2</span>,</span><br><span class="line">    attribute: &#123;</span><br><span class="line">      val: <span class="number">2</span>,</span><br><span class="line">      arr: [ <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  computed: &#123;</span><br><span class="line">    special() &#123; <span class="keyword">return</span> <span class="keyword">this</span>.attribute.val + <span class="keyword">this</span>.attribute.arr[<span class="number">0</span>] &#125;,</span><br><span class="line">    add() &#123; <span class="keyword">return</span> <span class="keyword">this</span>.att1 + <span class="keyword">this</span>.att2 &#125;,</span><br><span class="line">    minus() &#123; <span class="keyword">return</span> <span class="keyword">this</span>.att1 - <span class="keyword">this</span>.att2 &#125;,</span><br><span class="line">    sum() &#123; <span class="keyword">return</span> <span class="keyword">this</span>.add + <span class="keyword">this</span>.minus &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    multiple() &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.att1 * <span class="keyword">this</span>.att2</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'************************************'</span>)</span><br><span class="line"><span class="built_in">console</span>.log(instance) <span class="comment">// &#123; att1: 1, att2: 2, attribute: &#123; val: 2, arr: [ 1, 2, 3 ] &#125;, special: 3, add: 3, minus: -1, sum: 2, multiple: [Function: multiple] &#125;</span></span><br><span class="line"><span class="built_in">console</span>.log(instance.multiple()) <span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line">instance.att1 = <span class="number">3</span></span><br><span class="line">instance.att2 = <span class="number">5</span></span><br><span class="line">instance.attribute.val = <span class="number">5</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'************************************'</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(instance.multiple()) <span class="comment">// 15</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(instance) <span class="comment">// &#123; att1: 3, att2: 5, attribute: &#123; val: 5, arr: [ 1, 2, 3 ] &#125;, special: 6, add: 8, minus: -2, sum: 6, multiple: [Function: multiple] &#125;</span></span><br></pre></td></tr></table></figure></p>
+<p>和之前<a href="https://liuzip.github.io/2019/11/08/proxy/" target="_blank" rel="noopener">第一版</a>得区别在于：</p>
+<ol>
+<li>data和computed得映射关系，虽然还是使用map作为数据存储得容器，但是key指开始使用对应得对象</li>
+<li>迭代更新Proxy中得data数据，<a href="https://github.com/liuzip/proxy/commit/e578781a68dbbefdf9b14b25b9fafca539f653df" target="_blank" rel="noopener">之前写过一个版本</a>，是先转换成一层层得proxy对象，再统一使用new Proxy，但这种做法会使得生成很多新的对象，再查找Map得时候，会有问题</li>
+</ol>
+<p>其实整体思路是一样得，先生成Proxy，再确定映射关系，更新data值来更新computed值，一旦更新数据，查找Map找到受到影响得数据，再更新对应得数据就好</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/11/18/ProxyV2/" data-id="ck349ot6q0000okv4e6uf1hox" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/11/08/proxy/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Proxy代理</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tech/">tech</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/algorithm/" style="font-size: 20px;">algorithm</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/tech/" style="font-size: 20px;">tech</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/18/ProxyV2/">Proxy代理V2</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/08/proxy/">Proxy代理</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/25/PWA/">PWA</a>
+          </li>
+        
+          <li>
+            <a href="/2019/05/28/iteration/">迭代算法的尾调优化</a>
+          </li>
+        
+          <li>
+            <a href="/2019/04/27/calculateAST/">四则运算AST</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 liuzip<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
