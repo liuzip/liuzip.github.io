@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>四则运算AST完成版本 | { f: (l, z) =&gt; 611 }</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一共两大块部分，tokenizer来解析整个四则运算的表达式，变成tokens，walker来解析并生成ast树，最后计算嘛，很随意 使用eval是为了适配另外一个项目，写的一个类似Vue的小东西，其中需要计算模板文件中的文本内容（双大括号），因此需要使用eval来进行四则运算 123456789101112131415161718192021222324252627282930313233343">
+<meta name="keywords" content="algorithm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="四则运算AST完成版本">
+<meta property="og:url" content="http://yoursite.com/2019/12/15/calculateASTV2/index.html">
+<meta property="og:site_name" content="{ f: (l, z) =&gt; 611 }">
+<meta property="og:description" content="一共两大块部分，tokenizer来解析整个四则运算的表达式，变成tokens，walker来解析并生成ast树，最后计算嘛，很随意 使用eval是为了适配另外一个项目，写的一个类似Vue的小东西，其中需要计算模板文件中的文本内容（双大括号），因此需要使用eval来进行四则运算 123456789101112131415161718192021222324252627282930313233343">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-12-16T07:50:18.774Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="四则运算AST完成版本">
+<meta name="twitter:description" content="一共两大块部分，tokenizer来解析整个四则运算的表达式，变成tokens，walker来解析并生成ast树，最后计算嘛，很随意 使用eval是为了适配另外一个项目，写的一个类似Vue的小东西，其中需要计算模板文件中的文本内容（双大括号），因此需要使用eval来进行四则运算 123456789101112131415161718192021222324252627282930313233343">
+  
+    <link rel="alternate" href="/atom.xml" title="{ f: (l, z) =&gt; 611 }" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">{ f: (l, z) =&gt; 611 }</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-calculateASTV2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/12/15/calculateASTV2/" class="article-date">
+  <time datetime="2019-12-15T07:44:14.000Z" itemprop="datePublished">2019-12-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      四则运算AST完成版本
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一共两大块部分，tokenizer来解析整个四则运算的表达式，变成tokens，walker来解析并生成ast树，最后计算嘛，很随意</p>
+<p>使用eval是为了适配另外一个项目，写的一个类似Vue的小东西，其中需要计算模板文件中的文本内容（双大括号），因此需要使用eval来进行四则运算</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">calculation</span>(<span class="params">expression</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> tokens = tokenizer(expression)</span><br><span class="line">  <span class="keyword">let</span> ast = walker(tokens)()</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="title">calculateExpression</span>(<span class="params">target, node = ast</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(node.type === <span class="string">'Parameter'</span>)</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">get</span>(target, node.value, '')</span><br><span class="line">    else &#123;</span><br><span class="line">      <span class="keyword">let</span> left = calculateExpression(target, node.children[<span class="number">0</span>])</span><br><span class="line">      <span class="keyword">let</span> right = calculateExpression(target, node.children[<span class="number">1</span>])</span><br><span class="line">      <span class="keyword">let</span> result</span><br><span class="line">      <span class="built_in">eval</span>(<span class="string">`result = <span class="subst">$&#123; left &#125;</span> <span class="subst">$&#123; node.value &#125;</span> <span class="subst">$&#123; right &#125;</span>`</span>)</span><br><span class="line">      <span class="keyword">return</span> result</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// helpers</span></span><br><span class="line"><span class="comment">// 拆分操作符</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">tokenizer</span>(<span class="params">expression</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> expression.split(<span class="regexp">/(\+|-|\*|\/|\(|\))/g</span>)</span><br><span class="line">      .map(<span class="function"><span class="params">w</span> =&gt;</span> w.trim()).filter(<span class="built_in">Boolean</span>)</span><br><span class="line">      .map(<span class="function"><span class="params">w</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(w === <span class="string">'('</span> || w === <span class="string">')'</span>)</span><br><span class="line">          <span class="keyword">return</span> &#123; <span class="attr">type</span>: <span class="string">'parenthesis'</span>, <span class="attr">value</span>: w &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(w === <span class="string">'+'</span> || w === <span class="string">'-'</span> || w === <span class="string">'*'</span> || w === <span class="string">'/'</span>)</span><br><span class="line">          <span class="keyword">return</span> &#123; <span class="attr">type</span>: <span class="string">'operator'</span>, <span class="attr">value</span>: w &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">          <span class="keyword">return</span> &#123; <span class="attr">type</span>: <span class="string">'parameter'</span>, <span class="attr">value</span>: w &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 建立AST tree</span></span><br><span class="line"><span class="comment">// 四则运算的AST树：</span></span><br><span class="line"><span class="comment">// 1+2*3+(4-5*6)*7</span></span><br><span class="line"><span class="comment">//   +</span></span><br><span class="line"><span class="comment">//  / \</span></span><br><span class="line"><span class="comment">// 1    +</span></span><br><span class="line"><span class="comment">//    /   \</span></span><br><span class="line"><span class="comment">//   *     *</span></span><br><span class="line"><span class="comment">//  / \   / \</span></span><br><span class="line"><span class="comment">// 2   3 -   7</span></span><br><span class="line"><span class="comment">//      / \</span></span><br><span class="line"><span class="comment">//     4   *</span></span><br><span class="line"><span class="comment">//        / \</span></span><br><span class="line"><span class="comment">//       5   6</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成的数据结构应该能够表明四则运算的操作顺序</span></span><br><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">//   type: '', // Operator - 操作符 Parameter - 操作对象</span></span><br><span class="line"><span class="comment">//   value: '', // 数值</span></span><br><span class="line"><span class="comment">//   children: [Object, Object] // 如果是操作符，则具有俩子节点</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">walker</span>(<span class="params">tokens</span>) </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">isThereParenthesis</span>(<span class="params">list</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">      list.findIndex(<span class="function"><span class="params">t</span> =&gt;</span> t.type === <span class="string">'parenthesis'</span> &amp;&amp; t.value === <span class="string">'('</span>),</span><br><span class="line">      findLastIndex.call(list, t =&gt; t.type === <span class="string">'parenthesis'</span> &amp;&amp; t.value === <span class="string">')'</span>)</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">findLastIndex</span>(<span class="params">cb</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> index = <span class="keyword">this</span>.map(<span class="function"><span class="params">t</span> =&gt;</span> t).reverse().findIndex(cb)</span><br><span class="line">    <span class="keyword">return</span> index === <span class="number">-1</span> ? index : <span class="keyword">this</span>.length - index - <span class="number">1</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">isInvalidExpression</span>(<span class="params"></span>) </span>&#123; <span class="keyword">throw</span> <span class="built_in">Error</span>(<span class="string">'invalid expression'</span>) &#125; <span class="comment">// 异常表达式</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">findOperator</span>(<span class="params">operator</span>) </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>.findIndex(<span class="function"><span class="params">t</span> =&gt;</span> t.type === <span class="string">'operator'</span> &amp;&amp; operator.some(<span class="function"><span class="params">o</span> =&gt;</span> o === t.value))&#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="title">parser</span>(<span class="params">start = <span class="number">0</span>, end = tokens.length</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(tokens[start] &amp;&amp; tokens[start].value === <span class="string">'('</span> &amp;&amp; tokens[end - <span class="number">1</span>] &amp;&amp; tokens[end - <span class="number">1</span>].value === <span class="string">')'</span>) &#123;</span><br><span class="line">      start ++</span><br><span class="line">      end --</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(start &gt;= end) <span class="comment">// 取完了，或者传入得是类似()这般得表达式</span></span><br><span class="line">      <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">  </span><br><span class="line">    <span class="keyword">let</span> list = tokens.slice(start, end) <span class="comment">// 待处理得字段</span></span><br><span class="line">    <span class="keyword">let</span> [ sp, ep ] = isThereParenthesis(list)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(list.length === <span class="number">1</span>) <span class="comment">// 只有一个点，只能是数字</span></span><br><span class="line">        <span class="keyword">return</span> list[<span class="number">0</span>].type === <span class="string">'parameter'</span> ? &#123; <span class="attr">type</span>: <span class="string">'Parameter'</span>, <span class="attr">value</span>: list[<span class="number">0</span>].value &#125; : isInvalidExpression()</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(sp === <span class="number">-1</span> &amp;&amp; ep === <span class="number">-1</span>) &#123;</span><br><span class="line">      <span class="keyword">let</span> lowerOperator = findOperator.call(list, [<span class="string">'+'</span>, <span class="string">'-'</span>] ) <span class="comment">// 首个低级操作符</span></span><br><span class="line">      <span class="keyword">let</span> operator = (lowerOperator === <span class="number">-1</span> ?</span><br><span class="line">                      findOperator.call(list, [<span class="string">'*'</span>, <span class="string">'/'</span>] ) :</span><br><span class="line">                      lowerOperator) + start <span class="comment">// 待分类的操作符</span></span><br><span class="line">      <span class="keyword">if</span>(operator &lt; start)</span><br><span class="line">        isInvalidExpression() <span class="comment">// 没找到操作符</span></span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">          type: <span class="string">'Operator'</span>,</span><br><span class="line">          value: tokens[operator].value,</span><br><span class="line">          children: [</span><br><span class="line">            parser(start, operator),</span><br><span class="line">            parser(operator + <span class="number">1</span>, end)</span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(sp !== <span class="number">-1</span> &amp;&amp; ep !== <span class="number">-1</span>) &#123;</span><br><span class="line">      <span class="keyword">let</span> operator = findOperator.call(list.slice(<span class="number">0</span>, sp), [<span class="string">'+'</span>, <span class="string">'-'</span>] ) <span class="comment">// 括号左半部分低级操作符</span></span><br><span class="line">      <span class="keyword">let</span> offset = <span class="number">0</span></span><br><span class="line">      <span class="keyword">if</span>(operator === <span class="number">-1</span>) &#123; <span class="comment">// 括号右半部分低级操作符</span></span><br><span class="line">        operator = findOperator.call(list.slice(ep, list.length), [<span class="string">'+'</span>, <span class="string">'-'</span>] )</span><br><span class="line">        offset = ep</span><br><span class="line">      &#125;</span><br><span class="line">        </span><br><span class="line">      <span class="keyword">if</span>(operator === <span class="number">-1</span>) &#123; <span class="comment">// 括号左半部分高级操作符</span></span><br><span class="line">        operator = findOperator.call(list.slice(<span class="number">0</span>, sp), [<span class="string">'*'</span>, <span class="string">'/'</span>] )</span><br><span class="line">        offset = <span class="number">0</span></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span>(operator === <span class="number">-1</span>) &#123; <span class="comment">// 括号右半部分高级操作符</span></span><br><span class="line">        operator = findOperator.call(list.slice(ep, list.length), [<span class="string">'*'</span>, <span class="string">'/'</span>] )</span><br><span class="line">        offset = ep</span><br><span class="line">      &#125;</span><br><span class="line">        </span><br><span class="line">      <span class="keyword">if</span>(operator !== <span class="number">-1</span>) &#123;</span><br><span class="line">        operator += (start + offset)</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">          type: <span class="string">'Operator'</span>,</span><br><span class="line">          value: tokens[operator].value,</span><br><span class="line">          children: [</span><br><span class="line">            parser(start, operator),</span><br><span class="line">            parser(operator + <span class="number">1</span>, end)</span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span></span><br><span class="line">        isInvalidExpression() <span class="comment">// 括号两侧没有操作符，直接接了数字</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      isInvalidExpression()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取指定路径上的结果</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">get</span>(<span class="params">target, path, notFoundValue = undefined</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(<span class="regexp">/^\d+(\.\d+)?$/</span>.test(path)) <span class="comment">// 纯数字</span></span><br><span class="line">    <span class="keyword">return</span> path</span><br><span class="line">  <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> keyPath = path.split(<span class="string">'.'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; keyPath.length; i++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (target &amp;&amp; target.hasOwnProperty(keyPath[i]))</span><br><span class="line">        target = target[keyPath[i]];</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> notFoundValue</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> target</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Oh, yeah~</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/15/calculateASTV2/" data-id="ck48504ng0001r4v4mjzwkkjm" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/algorithm/">algorithm</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/11/18/ProxyV2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Proxy代理V2</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/algorithm/">algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tech/">tech</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/algorithm/" style="font-size: 20px;">algorithm</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/tech/" style="font-size: 20px;">tech</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/12/15/calculateASTV2/">四则运算AST完成版本</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/18/ProxyV2/">Proxy代理V2</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/08/proxy/">Proxy代理</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/25/PWA/">PWA</a>
+          </li>
+        
+          <li>
+            <a href="/2019/05/28/iteration/">迭代算法的尾调优化</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 liuzip<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
