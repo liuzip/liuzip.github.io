@@ -1,0 +1,28 @@
+{
+  "name": "LIUZIP",
+  "short_name": "LIUZIP",
+  "description": "LIUZIP",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "share_target": {
+    "action": "compose",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
+  "related_applications": [],
+  "prefer_related_applications": false
+}
