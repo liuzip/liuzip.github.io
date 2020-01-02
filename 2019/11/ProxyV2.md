@@ -146,7 +146,7 @@ console.log(instance.multiple()) // 15
 console.log(instance) // { att1: 3, att2: 5, attribute: { val: 5, arr: [ 1, 2, 3 ] }, special: 6, add: 8, minus: -2, sum: 6, multiple: [Function: multiple] }
 ```
 
-和之前[第一版](/2019/11/Proxy.md)得区别在于：
+和之前[第一版](/2019/11/Proxy)得区别在于：
 1. data和computed得映射关系，虽然还是使用map作为数据存储得容器，但是key指开始使用对应得对象
 2. 迭代更新Proxy中得data数据，[之前写过一个版本](https://github.com/liuzip/proxy/commit/e578781a68dbbefdf9b14b25b9fafca539f653df)，是先转换成一层层得proxy对象，再统一使用new Proxy，但这种做法会使得生成很多新的对象，再查找Map得时候，会有问题
 
