@@ -1,12 +1,10 @@
-![logo](_media/icon.svg)
+# { f: (l, z) => 611 }
 
-# docsify
+> 记录点东西
 
-> A magical documentation site generator.
-
-* Simple and lightweight (~12kb gzipped)
-* Multiple themes
-* Not build static html files
+* 我觉得有意思的
+* 我觉得记不住的
+* 尽量跟工具无关吧
 
 [GitHub](https://github.com/liuzip/)
-[About Me](about/me.md)
+[Get Start](2019/04/Matrix.md)

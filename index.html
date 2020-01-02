@@ -19,12 +19,21 @@
   <div id="app"></div>
   <script>
     window.$docsify = {
+      auto2top: true,
       coverpage: true,
       loadSidebar: true,
-      name: '',
-      repo: '',
+      notFoundPage: '404.md',
+      name: '{ f: (l, z) => 611 }',
+      repo: 'https://github.com/liuzip/',
+
+      search: {
+        placeholder: '搜索一下',
+        noData: '啥都没有',
+        depth: 2
+      }
     }
   </script>
   <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
+  <script src="//unpkg.com/docsify/lib/plugins/search.js"></script>
 </body>
 </html>
