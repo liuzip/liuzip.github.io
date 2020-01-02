@@ -207,4 +207,4 @@ function parser(tokens) {
 
 <s>to be continued...</s>
 
-[完成版本](https://liuzip.github.io/2019/12/calculateASTV2.md)
+[完成版本](/2019/12/calculateASTV2.md)
