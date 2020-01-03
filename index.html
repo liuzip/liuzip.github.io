@@ -25,6 +25,27 @@
 <body>
   <div id="app"></div>
   <script>
+    function activeParent(node, type) {
+      if(!node || node.className.includes('sidebar-nav'))
+        return
+      else {
+        node.style.display = 'block'
+        if(node.nextElementSibling && type !== 'prev') activeParent(node.nextElementSibling, 'next')
+        if(node.previousElementSibling && type !== 'next') activeParent(node.previousElementSibling, 'prev')
+        activeParent(node.parentElement)
+      }
+    }
+
+    function activeSon(node) {
+      if(!node) return
+
+      Array.prototype.forEach.call(node.children, son => {
+        son.style.display = 'block'
+        if(son && son.tagName.toLowerCase() !== 'li')
+          activeSon(son)
+      })
+    }
+
     window.$docsify = {
       auto2top: true,
       coverpage: true,
@@ -32,20 +53,45 @@
       notFoundPage: '/others/404.md',
       name: '{ f: (l, z) => 611 }',
       repo: 'https://github.com/liuzip/',
-
       search: {
         placeholder: '搜索一下',
         noData: '啥都没有',
         depth: 3
-      }
+      },
+      plugins: [
+        function(hook, vm) {
+          hook.doneEach(function() {
+            document.querySelectorAll('.sidebar-nav li').forEach(node => {
+              node.style.display = 'none'
+              node.onclick = function(e) {
+                activeSon(e.target)
+                e.stopPropagation()
+              }
+            })
+            document.querySelectorAll('.sidebar-nav > ul > li')
+              .forEach(node => node.style.display = 'block')
+
+            let active = document.querySelector('.sidebar-nav li.active')
+            if(active) activeParent(active)
+          })
+        }
+      ]
     }
   </script>
   <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
   <script src="//unpkg.com/docsify/lib/plugins/search.js"></script>
+  <script src="//unpkg.com/docsify/lib/plugins/zoom-image.js"></script>
   <script>
     if (typeof navigator.serviceWorker !== 'undefined') {
       navigator.serviceWorker.register('sw.js')
     }
   </script>
+  <style>
+    .sidebar-toggle {
+      border-bottom: 0 solid transparent;
+      border-bottom-width: env(safe-area-inset-bottom);
+      border-bottom-width: constant(safe-area-inset-bottom);
+    }
+  </style>
 </body>
 </html>
